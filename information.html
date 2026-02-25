@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Registration saved - Disability Support Registry</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/2.0.0/modern-normalize.min.css"
+      integrity="sha512-6VUu1vRJ5arIr36A9KMxy4z1AagWYh8PSq9K7ZdhykNosvsXKVqDT3+kxk9HFbyiPTHeDpQUrAGMH89WA2Y2vQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="app-header-inner">
+        <div class="brand">
+          <span class="brand-mark">CareConnect</span>
+          <span class="brand-tagline">Support for people with disabilities</span>
+        </div>
+        <nav>
+          <a href="{{ url_for('index') }}" class="link">Register another person</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="card">
+        <h1>Registration saved</h1>
+        <p>
+          The details for
+          <strong>{{ person.full_name }}</strong>
+          have been stored.
+        </p>
+
+        <div class="summary">
+          <h2>Key details</h2>
+          <dl class="summary-list">
+            <div>
+              <dt>Name</dt>
+              <dd>{{ person.full_name }}</dd>
+            </div>
+            {% if person.email %}
+            <div>
+              <dt>Email</dt>
+              <dd>{{ person.email }}</dd>
+            </div>
+            {% endif %}
+            {% if person.phone %}
+            <div>
+              <dt>Phone</dt>
+              <dd>{{ person.phone }}</dd>
+            </div>
+            {% endif %}
+            {% if person.disability_type %}
+            <div>
+              <dt>Disability / condition</dt>
+              <dd>{{ person.disability_type }}</dd>
+            </div>
+            {% endif %}
+            {% if person.support_needs %}
+            <div>
+              <dt>Important information</dt>
+              <dd>{{ person.support_needs }}</dd>
+            </div>
+            {% endif %}
+            {% if person.address or person.city or person.country %}
+            <div>
+              <dt>Location</dt>
+              <dd>
+                {{ person.address }}{% if person.city %}, {{ person.city }}{% endif %}{% if person.country %}, {{ person.country }}{% endif %}
+              </dd>
+            </div>
+            {% endif %}
+          </dl>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Nearby hospitals and authorities</h2>
+        {% if services and services|length > 0 %}
+        <p>
+          These services were found within a few kilometers of the registered
+          location. Use your local protocols to contact them if needed.
+        </p>
+
+        <ul class="service-list">
+          {% for service in services %}
+          <li class="service-item">
+            <div class="service-main">
+              <span class="service-type">{{ service.type | replace('_', ' ') }}</span>
+              <span class="service-name">{{ service.name }}</span>
+            </div>
+            {% if service.address %}
+            <div class="service-meta">
+              <span>{{ service.address }}</span>
+            </div>
+            {% endif %}
+            {% if service.lat and service.lon %}
+            <div class="service-meta">
+              <span>Lat: {{ '%.5f'|format(service.lat) }}, Lon: {{ '%.5f'|format(service.lon) }}</span>
+            </div>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p>
+          No nearby services could be found automatically. You may need to
+          search manually using local directories or maps.
+        </p>
+        {% endif %}
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <p>Keep this information secure and only share it with trusted services.</p>
+    </footer>
+  </body>
+</html>
+
